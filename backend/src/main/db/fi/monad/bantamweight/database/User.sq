@@ -1,0 +1,62 @@
+CREATE TABLE user (
+      id          INTEGER         PRIMARY KEY AUTOINCREMENT,
+      first_name  TEXT            NOT NULL,
+      last_name   TEXT            NOT NULL,
+      email       TEXT            NOT NULL,
+      password    TEXT            NOT NULL
+);
+
+CREATE UNIQUE INDEX user_email ON user (email);
+
+CREATE TABLE "role"
+(
+    name  TEXT PRIMARY KEY
+);
+
+CREATE TABLE "user_role"
+(
+    user_id INTEGER NOT NULL,
+    role_name TEXT NOT NULL,
+  CONSTRAINT user_role_user_id_role_name PRIMARY KEY (user_id, role_name),
+  CONSTRAINT user_role_user_id FOREIGN KEY (user_id)
+    REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT user_role_role_name FOREIGN KEY (role_name)
+    REFERENCES role (name) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+fetchAllUsers:
+SELECT u.id, u.email, u.first_name, u.last_name,
+    (SELECT GROUP_CONCAT(ur.role_name) FROM user_role ur WHERE u.id = ur.user_id ) roles
+FROM user u;
+
+fetchUserByEmail:
+SELECT u.id, u.email, u.first_name, u.last_name, u.password,
+    (SELECT GROUP_CONCAT(ur.role_name) || "" FROM user_role ur WHERE u.id = ur.user_id ) roles
+FROM user u WHERE email = ?;
+
+insertUser:
+INSERT INTO user(first_name, last_name, email, password)
+VALUES (?, ?, ?, ?);
+
+fetchAllRoles:
+SELECT * FROM role;
+
+insertRole:
+INSERT INTO role(name)
+VALUES (?);
+
+deleteRole:
+DELETE FROM role WHERE name = ?;
+
+insertUserRole:
+INSERT INTO user_role(user_id, role_name)
+VALUES (?, ?);
+
+deleteUserRole:
+DELETE FROM user_role WHERE user_id = ? AND role_name = ?;
+
+deleteUser:
+DELETE FROM user WHERE id = ?;
+
+fetchLastUserId:
+SELECT MAX(id) id FROM user;

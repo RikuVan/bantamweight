@@ -1,0 +1,13 @@
+.gradle/
+build/
+node_modules/
+dist/
+.vscode/
+.DS_Store
+.history
+bantamweight.db
+backend/src/main/resources/public/
+.env
+!application-dev-TEMPLATE.yaml
+application-dev.yaml
+.idea

@@ -29,7 +29,7 @@ dependencies {
     implementation(Square.SqlDelight.drivers.jdbcSqlite)
     implementation(Libs.http4k_client_okhttp)
     implementation(Libs.http4k_core)
-    implementation(Libs.http4k_format_moshi)
+    implementation(Libs.http4k_format_jackson)
     implementation(Libs.http4k_server_undertow)
     implementation(Libs.hoplite_core)
     implementation(Libs.hoplite_yaml)

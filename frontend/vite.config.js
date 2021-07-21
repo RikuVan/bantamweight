@@ -1,3 +1,4 @@
+import { ViteAliases } from 'vite-aliases'
 import { defineConfig } from 'vite'
 import fs from 'fs'
 import prettier from 'prettier'
@@ -24,6 +25,9 @@ export default defineConfig(({ mode }) => {
   const production = mode === 'production'
   return {
     plugins: [
+      ViteAliases({
+        useTypescript: true,
+      }),
       svelteSVG({
         svgoConfig: {},
       }),
@@ -33,12 +37,12 @@ export default defineConfig(({ mode }) => {
           dev: !production,
         },
       }),
-      createAssetManifest(),
+      production && createAssetManifest(),
     ],
     server: {
       host: 'localhost',
       port: 5000,
-      proxy: proxySettings('/api', '/user'),
+      proxy: proxySettings('/api', '/users'),
     },
     build: {
       sourcemap: true,

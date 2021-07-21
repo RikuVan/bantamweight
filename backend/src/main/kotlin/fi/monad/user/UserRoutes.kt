@@ -10,8 +10,9 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.cookie.cookie
 import org.http4k.core.cookie.replaceCookie
+import org.http4k.core.then
 import org.http4k.core.with
-import org.http4k.format.Moshi.auto
+import org.http4k.format.Jackson.auto
 import org.http4k.routing.bind
 
 
@@ -24,9 +25,27 @@ data class ErrorDetails(val message: String?)
 
 fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHttpHandler {
 
+
+    val usersResponseLens = Body.auto<List<UserListItemOut>>().toLens()
     val loginRequestLens = Body.auto<Credentials>().toLens()
     val loginResponseLens = Body.auto<UserOut>().toLens()
     val errorResponseLens = Body.auto<ErrorDetails>().toLens()
+
+    val users: HttpHandler = { request ->
+        deps.userRepository.fetchAll().fold(
+            { users ->
+                Response(Status.OK).with(
+                    usersResponseLens of users.toDTO()
+                )
+            },
+            {
+                Response(Status.NOT_FOUND).with(
+                    errorResponseLens of ErrorDetails(it.toString())
+                )
+            }
+        )
+
+    }
 
     val login: HttpHandler = { request ->
         deps.authService.login(loginRequestLens(request)).fold(
@@ -78,7 +97,8 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
 
     }
 
-    return "/user" bind routes(
+    return "/users" bind routes(
+        "" bind Method.GET to AuthFilter(deps.tokenHandler).then(login),
         "/login" bind Method.POST to login,
         "/logout" bind Method.POST to logout,
         "/refresh" bind Method.POST to refresh

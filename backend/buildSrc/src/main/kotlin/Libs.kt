@@ -37,7 +37,7 @@ object Libs {
 
     const val http4k_core: String = "org.http4k:http4k-core:_"
 
-    const val http4k_format_moshi: String = "org.http4k:http4k-format-moshi:_"
+    const val http4k_format_jackson: String = "org.http4k:http4k-format-jackson:_"
 
     const val http4k_server_undertow: String = "org.http4k:http4k-server-undertow:_"
 

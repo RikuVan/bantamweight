@@ -1,20 +1,48 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte'
-  import navaid from 'navaid'
-  import type { Params } from 'navaid'
-  import Login from './pages/Login.svelte'
+  import { onDestroy, SvelteComponent, setContext } from 'svelte'
+  import type { Router, Params } from 'navaid'
+  import Login from '@pages/Login.svelte'
+  import Me from '@pages/Me.svelte'
+  import Admin from '@pages/Admin.svelte'
+  import { routerStore } from '@store/router'
+  import { userStore } from '@store/user'
 
-  let currentPage = Login
-  let params: Params = {}
-  let active: string = 'login'
+  // create instance in main to ensure it is ready when accessed by stores
+  export let router: Router
+  let pageComponent = Login
 
-  const router = navaid().on('/', handleRoute('login', Login)).listen()
+  router
+    .on('/', handleRoute('/', Login))
+    .on('/me', handleAuthenticatedRoute('/me', Me))
+    .on('/admin', handleAdminRoute('/admin', Admin))
+    .listen()
 
-  function handleRoute(name: string, page: any) {
-    return (routeParams: Params) => {
-      currentPage = page
-      params = routeParams
-      active = name
+  setContext('router', routerStore)
+  setContext('navigate', router.route)
+
+  function handleRoute(path: string, page: typeof SvelteComponent) {
+    return (params: Params) => {
+      pageComponent = page
+      $routerStore = {
+        path,
+        params,
+      }
+    }
+  }
+
+  function handleAuthenticatedRoute(path: string, page: typeof SvelteComponent) {
+    if ($userStore.accessToken) {
+      return handleRoute(path, page)
+    } else {
+      router.route('/')
+    }
+  }
+
+  function handleAdminRoute(path: string, page: typeof SvelteComponent) {
+    if (Array.isArray($userStore.roles) && $userStore.roles.includes('admin')) {
+      return handleRoute(path, page)
+    } else {
+      router.route('/me', true)
     }
   }
 
@@ -23,4 +51,4 @@
   })
 </script>
 
-<svelte:component this={currentPage} navigate={router.route} />
+<svelte:component this={pageComponent} navigate={router.route} />

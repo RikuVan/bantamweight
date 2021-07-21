@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@sveltejs/vite-plugin-svelte': ^1.0.0-next.11
   '@tsconfig/svelte': ^2.0.1
+  final-form: ^4.20.2
   navaid: ^1.2.0
   prettier: ^2.3.2
   rimraf: ^3.0.2
@@ -13,9 +14,11 @@ specifiers:
   typescript: ^4.3.2
   unionize: ^3.1.0
   vite: ^2.4.2
+  vite-aliases: ^0.8.3
   vite-plugin-svelte-svg: ^1.0.0
 
 dependencies:
+  final-form: 4.20.2
   navaid: 1.2.0
   unionize: 3.1.0
 
@@ -30,9 +33,17 @@ devDependencies:
   tslib: 2.3.0
   typescript: 4.3.5
   vite: 2.4.2
+  vite-aliases: 0.8.3
   vite-plugin-svelte-svg: 1.0.0_svelte@3.38.3+vite@2.4.2
 
 packages:
+
+  /@babel/runtime/7.14.8:
+    resolution: {integrity: sha512-twj3L8Og5SaCRCErB4x4ajbvBIVV77CGeFglHpeg5WC5FF8TZzBWXtTJ4MqaD9QszLYTtr+IsaAL2rEUevb+eg==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
 
   /@rollup/pluginutils/4.1.1:
     resolution: {integrity: sha512-clDjivHqWGXi7u+0d2r2sBi4Ie6VLEAzWMIkvJLnDmxoOhBYOTfzGbOQBA32THHm11/LiJbd01tJUpJsbshSWQ==}
@@ -273,6 +284,12 @@ packages:
       to-regex-range: 5.0.1
     dev: true
 
+  /final-form/4.20.2:
+    resolution: {integrity: sha512-5i0IxqwjjPG1nUNCjWhqPCvQJJ2R+QwTwaAnjPmFnLbyjIHWuBPU8u+Ps4G3TcX2Sjno+O5xCZJzYcMJEzzfCQ==}
+    dependencies:
+      '@babel/runtime': 7.14.8
+    dev: false
+
   /fs.realpath/1.0.0:
     resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
     dev: true
@@ -478,6 +495,10 @@ packages:
     dependencies:
       picomatch: 2.3.0
     dev: true
+
+  /regenerator-runtime/0.13.7:
+    resolution: {integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==}
+    dev: false
 
   /regexparam/1.3.0:
     resolution: {integrity: sha512-6IQpFBv6e5vz1QAqI+V4k8P2e/3gRrqfCJ9FI+O1FLQTO+Uz6RXZEZOPmTJ6hlGj7gkERzY5BRCv09whKP96/g==}
@@ -685,6 +706,14 @@ packages:
     resolution: {integrity: sha512-LQZvbanzvpzvK0QYgRvnaA9VVe+g4nTbRlyoGGWDKFrZn0HJnDN5LC2Ti0+BxpKKOCrL3BQcRBVFPy/t12Y24Q==}
     dev: false
 
+  /vite-aliases/0.8.3:
+    resolution: {integrity: sha512-GGvq8Nmr/Q3/uQtlqSJ0Ss+c2dAuVfkiQMOo4O7lCvUJ0YB95onAHtXx9J4N4V/2lSuhsczEIMLhZT9GgmLAaw==}
+    dependencies:
+      chalk: 4.1.1
+      chokidar: 3.5.2
+      vite: 2.4.3
+    dev: true
+
   /vite-plugin-svelte-svg/1.0.0_svelte@3.38.3+vite@2.4.2:
     resolution: {integrity: sha512-IDkyjwArsAPs5DxmEpsPIiJC3POtzu4yrh0AHNL87eegh30vBUCAhPv72iV2KR2ZLCaM2dBAs3sb7U0+NbY8Xg==}
     peerDependencies:
@@ -698,6 +727,19 @@ packages:
 
   /vite/2.4.2:
     resolution: {integrity: sha512-2MifxD2I9fjyDmmEzbULOo3kOUoqX90A58cT6mECxoVQlMYFuijZsPQBuA14mqSwvV3ydUsqnq+BRWXyO9Qa+w==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.12.15
+      postcss: 8.3.5
+      resolve: 1.20.0
+      rollup: 2.53.2
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite/2.4.3:
+    resolution: {integrity: sha512-iT6NPeiUUZ2FkzC3eazytOEMRaM4J+xgRQcNcpRcbmfYjakCFP4WKPJpeEz1U5JEKHAtwv3ZBQketQUFhFU3ng==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:

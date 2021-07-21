@@ -1,16 +1,33 @@
 <script lang="ts">
-  import { post } from '../utils/api'
-  import { ApiResult } from '../utils/result'
-  import LockOpen from '../../public/lock-open.svg?component'
-  import User from '../../public/user.svg?component'
+  import { getContext, onMount } from 'svelte'
+  import { post } from '@utils/api'
+  import { ApiResult } from '@utils/result'
+  import { LockOpen, BoxingGloves } from '@components/icons'
+  import { userStore } from '@store/user'
+  import type { User } from '../store/user'
+
+  type Navigate = (uri: string, replace?: boolean) => void
+
+  const navigate: Navigate = getContext('navigate')
 
   let email = ''
   let password = ''
   let isLoading = false
   let isSuccess = false
+  let errorResponse = undefined
   let errors: Errors = {}
 
   type Errors = { email?: string; password?: string }
+
+  onMount(() => {
+    const unsubscribe = userStore.subscribe((user: User) => {
+      if (user?.accessToken) {
+        isSuccess = true
+        navigate('/me')
+      }
+    })
+    return () => unsubscribe()
+  })
 
   async function handleSubmit() {
     errors = {}
@@ -22,15 +39,34 @@
     }
     if (Object.keys(errors).length === 0) {
       isLoading = true
-      const response = await post('/user/login', { email, password })
+      errorResponse = undefined
+      const response = await post('/users/login', { email, password })
       ApiResult.match(response, {
-        OK: (data: any) => {
-          console.log(data)
+        Ok: ({ data }: { data: User }) => {
+          $userStore = data
           isSuccess = true
+          isLoading = false
+          navigate('/me')
         },
-        default: (e: any) => console.log(e),
+        NotFound: () => {
+          $userStore = {}
+          errorResponse = 'Please check your email and password combination'
+          isSuccess = false
+          isLoading = false
+        },
+        Unauthorized: () => {
+          $userStore = {}
+          errorResponse = 'Please check your email and password combination'
+          isSuccess = false
+          isLoading = false
+        },
+        default: () => {
+          $userStore = {}
+          errorResponse = 'An error occurred'
+          isSuccess = false
+          isLoading = false
+        },
       })
-      isSuccess = true
     }
   }
 </script>
@@ -39,14 +75,16 @@
   <form on:submit|preventDefault={handleSubmit}>
     {#if isSuccess}
       <div class="success">
-        <LockOpen />
+        <LockOpen width={24} height={24} />
         <br />
         You've been successfully logged in.
       </div>
     {:else}
-      <User />
-      <h1>Bantamweight</h1>
-      <h4>http4k + Svelte</h4>
+      <header>
+        <BoxingGloves />
+        <h1>Bantamweight</h1>
+        <h4>http4k + Svelte</h4>
+      </header>
 
       <label for="email">Email</label>
       <input name="email" placeholder="name@example.com" bind:value={email} />
@@ -66,6 +104,9 @@
         </ul>
       {/if}
     {/if}
+    {#if errorResponse}
+      <div class="backend-error">{errorResponse}</div>
+    {/if}
   </form>
 </main>
 
@@ -74,10 +115,19 @@
     margin-bottom: -5px;
   }
 
+  header,
   main {
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
+  }
+
+  header {
+    padding-bottom: 16px;
+  }
+
+  main {
     height: 100vh;
   }
 
@@ -85,8 +135,7 @@
     background-color: var(--orange);
     background-image: var(--orange-gradient);
     padding: 50px;
-    width: 250px;
-    height: 400px;
+    width: 320px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -97,7 +146,7 @@
   }
 
   label {
-    margin: 8px -8px;
+    margin: 4px 0;
     align-self: flex-start;
   }
 
@@ -139,7 +188,8 @@
     color: var(--black);
   }
 
-  .errors {
+  .errors,
+  .backend-error {
     list-style-type: none;
     padding: 10px;
     margin-top: 8px;

@@ -1,5 +1,6 @@
 html * {
   position: relative;
+  box-sizing: border-box;
 }
 
 body {

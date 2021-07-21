@@ -2,13 +2,10 @@ package fi.monad
 
 import fi.monad.diagnostic.Auditor
 import fi.monad.diagnostic.Diagnostic
-import fi.monad.diagnostic.DiagnosticDependencies
-import fi.monad.formats.MoshiMessage
+import fi.monad.formats.Message
 import fi.monad.formats.moshiMessageLens
 import fi.monad.persistence.initializeDatabase
-import fi.monad.user.UserDependencies
 import fi.monad.user.UserRoutes
-import org.http4k.core.Filter
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Method.GET
@@ -36,7 +33,7 @@ val app: HttpHandler = routes(
     },
 
     "/formats/json/moshi" bind GET to {
-        Response(OK).with(moshiMessageLens of MoshiMessage("Barry", "Hello there!"))
+        Response(OK).with(moshiMessageLens of Message("Barry", "Hello there!"))
     },
 
     "/testing/kotest" bind GET to { request ->
@@ -64,15 +61,6 @@ object Application {
     val withFilters: HttpHandler = ServerFilters.CatchAll()
         .then(ServerFilters.RequestTracing())
         .then(Auditor.Incoming(timedEvents))
-        .then(
-            ServerFilters.Cors(
-                CorsPolicy(
-                    OriginPolicy.AllowAll(),
-                    listOf("content-type"),
-                    listOf(GET, Method.PUT, Method.DELETE, Method.POST, Method.OPTIONS)
-                )
-            )
-        )
         .then(appRoutes)
 }
 

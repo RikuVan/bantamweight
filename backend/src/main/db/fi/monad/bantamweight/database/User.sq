@@ -26,7 +26,7 @@ CREATE TABLE "user_role"
 
 fetchAllUsers:
 SELECT u.id, u.email, u.first_name, u.last_name,
-    (SELECT GROUP_CONCAT(ur.role_name) FROM user_role ur WHERE u.id = ur.user_id ) roles
+    (SELECT GROUP_CONCAT(ur.role_name) || "" FROM user_role ur WHERE u.id = ur.user_id ) roles
 FROM user u;
 
 fetchUserByEmail:

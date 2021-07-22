@@ -14,4 +14,10 @@ class UserRepository(private val db: Database) {
     fun getUserByEmail(email: String): Result<FetchUserByEmail?, Throwable> = runCatching {
         db.userQueries.fetchUserByEmail(email).executeAsOneOrNull()
     }
+
+    fun updatePassword(hashedPassword: String, email: String): Result<Boolean, Throwable> = runCatching {
+        db.userQueries.updateUserPassword(hashedPassword, email.trim())
+        val user = db.userQueries.fetchUserByEmail(email).executeAsOne()
+        user.password == hashedPassword
+    }
 }

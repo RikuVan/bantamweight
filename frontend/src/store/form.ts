@@ -100,10 +100,13 @@ export type ReadableField = Readable<{
   input: FieldInputProps
   meta: FieldState<any>
 }>
+
+type InputEvent = Event & { currentTarget: EventTarget & HTMLInputElement }
+type Value = string | number | undefined | string[]
 export type FieldInputProps = {
   name: string
-  onBlur: (event?: Event) => void
-  onChange: (event: Event) => void
-  onFocus: (event?: Event) => void
-  value: string | number | undefined | Date
+  onBlur: (event?: InputEvent) => void
+  onChange: (value: Value) => void
+  onFocus: (event?: InputEvent) => void
+  value: string | number | undefined | string[]
 }

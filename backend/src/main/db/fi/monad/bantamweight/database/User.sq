@@ -34,16 +34,19 @@ SELECT u.id, u.email, u.first_name, u.last_name, u.password,
     (SELECT GROUP_CONCAT(ur.role_name) || "" FROM user_role ur WHERE u.id = ur.user_id ) roles
 FROM user u WHERE email = ?;
 
+-- sqldelight at sql 3.34 and RETURNING only available in 3.35
 insertUser:
 INSERT INTO user(first_name, last_name, email, password)
 VALUES (?, ?, ?, ?);
+
+updateUserPassword:
+UPDATE user SET password = ? WHERE email = ?;
 
 fetchAllRoles:
 SELECT * FROM role;
 
 insertRole:
-INSERT INTO role(name)
-VALUES (?);
+INSERT INTO role(name) VALUES (?);
 
 deleteRole:
 DELETE FROM role WHERE name = ?;

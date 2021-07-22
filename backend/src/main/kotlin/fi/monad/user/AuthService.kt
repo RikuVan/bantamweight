@@ -1,6 +1,7 @@
 package fi.monad.user
 
 import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.flatMap
 import com.github.michaelbull.result.map
@@ -64,7 +65,7 @@ class AuthService(
 
     fun refresh(refreshToken: String): Result<RefreshResult, Throwable> {
         return tokenHandler.readRefreshToken(refreshToken).flatMap { token ->
-            when (token) {
+            when(token) {
                 is Payload -> userRepository.getUserByEmail(token.email).map { user ->
                     if (user == null) return@map UserNotFoundForRefresh
                     val roles = user.roles.split(",")
@@ -82,6 +83,16 @@ class AuthService(
                 }
                 else       -> Err(throw Exception(token.toString()))
             }
+        }
+    }
+
+    fun verify(email: String, password: String): Result<Unit, Throwable> {
+        return userRepository.getUserByEmail(email).flatMap { user ->
+            if (user !== null && passwordEncryption.isValidPassword(
+                    password,
+                    user.password
+                )
+            ) Ok(Unit) else throw Throwable("Passwords do not match")
         }
     }
 

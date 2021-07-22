@@ -76,3 +76,18 @@ html[data-theme='dark'] {
 html[data-theme='dark'] body {
   --background: #ddd;
 }
+
+input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+  transition: all 300ms ease-in-out;
+  width: 100%;
+  padding: 8px;
+  background: #fff;
+}
+
+input:focus {
+  outline: 0;
+  border-bottom: 1px solid #666;
+}

@@ -8,7 +8,7 @@
 
   type Navigate = (uri: string, replace?: boolean) => void
 
-  const navigate: Navigate = getContext('navigate')
+  const navigate: Navigate = getContext('router')
 
   let email = ''
   let password = ''
@@ -149,22 +149,6 @@
     margin: 4px 0;
     align-self: flex-start;
   }
-
-  input {
-    border: none;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
-    transition: all 300ms ease-in-out;
-    width: 100%;
-    padding: 8px;
-    background: #fff;
-  }
-
-  input:focus {
-    outline: 0;
-    border-bottom: 1px solid #666;
-  }
-
   button {
     margin-top: 20px;
     background: var(--black);

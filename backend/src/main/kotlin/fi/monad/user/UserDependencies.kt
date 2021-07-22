@@ -5,8 +5,8 @@ import fi.monad.Application
 
 interface UserDependencies {
     private val appDeps: AppDependencies get() = Application.appDeps
-    val userRepository: UserRepository get() = UserRepository(appDeps.database)
-    val passwordEncryption: PasswordEncryption get() = appDeps.pwdEncryption
-    val tokenHandler: TokenHandler get() = TokenHandler(appDeps.config.auth.secret)
-    val authService: AuthService get() = AuthService(userRepository, passwordEncryption, tokenHandler)
+    val userRepository: UserRepository get() = appDeps.userRepository
+    val passwordEncryption: PasswordEncryption get() = appDeps.passwordEncryption
+    val tokenHandler: TokenHandler get() = appDeps.tokenHandler
+    val authService: AuthService get() = appDeps.authService
 }

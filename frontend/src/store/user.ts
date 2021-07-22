@@ -3,6 +3,7 @@ import { derived, writable } from 'svelte/store'
 import { ApiResult } from '@utils/result'
 import { USER_STORAGE_KEY } from '../utils/api'
 import { post } from '@utils/api'
+import { router } from '@utils/router'
 import { routerStore } from './router'
 import { sessionStorage } from '../utils/browserStorage'
 
@@ -30,6 +31,7 @@ export const createUserStore = (initialUser: User) => {
       },
       default: () => {
         user.set({})
+        router.route('/')
       },
     })
   }

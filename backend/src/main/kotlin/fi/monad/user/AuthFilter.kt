@@ -6,7 +6,11 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 
-fun AuthFilter(tokenHandler: TokenHandler, roles: List<String> = listOf("admin", "customer")): Filter {
+// pass lambda to filter to check if user can access route based on parsed accessToken and req
+val isAdmin = { payload: Payload, req: Request -> payload.roles.contains("admin") }
+val all = { payload: Payload, req: Request -> true }
+
+fun AuthFilter(tokenHandler: TokenHandler, predicate: (payload: Payload, req: Request) -> Boolean = all): Filter {
     return Filter { next ->
         { req ->
             req.accessToken?.let {
@@ -14,7 +18,7 @@ fun AuthFilter(tokenHandler: TokenHandler, roles: List<String> = listOf("admin",
                     { tokenContent ->
                         when(tokenContent) {
                             is Payload -> {
-                                if (tokenContent.roles.intersect(roles).isNotEmpty()) {
+                                if (predicate(tokenContent, req)) {
                                     next(req)
                                 } else {
                                     Response(Status.UNAUTHORIZED)

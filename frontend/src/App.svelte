@@ -1,19 +1,19 @@
 <script lang="ts">
+  import { router } from '@utils/router'
+  import type { Params } from 'navaid'
   import { onDestroy, SvelteComponent, setContext } from 'svelte'
-  import type { Router, Params } from 'navaid'
   import Login from '@pages/Login.svelte'
   import Me from '@pages/Me.svelte'
   import Admin from '@pages/Admin.svelte'
   import { routerStore } from '@store/router'
   import { userStore } from '@store/user'
+  import SnackbarContainer from '@components/snackbar/SnackbarContainer.svelte'
 
-  // create instance in main to ensure it is ready when accessed by stores
-  export let router: Router
   let pageComponent = Login
 
   router
     .on('/', handleRoute('/', Login))
-    .on('/me', handleAuthenticatedRoute('/me', Me))
+    .on('/me', handleRoute('/me', Me))
     .on('/admin', handleAdminRoute('/admin', Admin))
     .listen()
 
@@ -30,14 +30,6 @@
     }
   }
 
-  function handleAuthenticatedRoute(path: string, page: typeof SvelteComponent) {
-    if ($userStore.accessToken) {
-      return handleRoute(path, page)
-    } else {
-      router.route('/')
-    }
-  }
-
   function handleAdminRoute(path: string, page: typeof SvelteComponent) {
     if (Array.isArray($userStore.roles) && $userStore.roles.includes('admin')) {
       return handleRoute(path, page)
@@ -51,4 +43,6 @@
   })
 </script>
 
-<svelte:component this={pageComponent} navigate={router.route} />
+<SnackbarContainer>
+  <svelte:component this={pageComponent} navigate={router.route} />
+</SnackbarContainer>

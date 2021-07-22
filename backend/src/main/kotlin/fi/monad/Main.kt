@@ -42,7 +42,7 @@ val app: HttpHandler = routes(
 )
 
 object Application {
-    val appDeps= object : AppDependencies() {}
+    val appDeps = object : AppDependencies() {}
 
     init {
         initializeDatabase(appDeps)

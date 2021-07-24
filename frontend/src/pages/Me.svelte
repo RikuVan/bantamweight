@@ -30,7 +30,7 @@
     onSubmit,
   })
 
-  const { form, state } = formStore
+  const { form } = formStore
   setContext('form', formStore)
 
   const showSnackbar =
@@ -43,8 +43,6 @@
       oldPassword: values.oldPassword,
       newPassword: values.newPassword,
     })
-
-    console.log(JSON.stringify(response, null, 2))
 
     ApiResult.match(response, {
       Ok: () => {
@@ -77,8 +75,8 @@
 <Layout>
   <form on:submit|preventDefault={form.submit}>
     <h1>Change your password</h1>
-    <label for="oldPassword">Current Password</label>
     <Field name="oldPassword" let:input let:meta>
+      <label for="oldPassword">Current Password</label>
       <input
         name={input.name}
         type="text"
@@ -90,8 +88,8 @@
       />
       <FieldError {meta} />
     </Field>
-    <label for="newPassword">New Password</label>
     <Field name="newPassword" let:input let:meta>
+      <label for="newPassword">New Password</label>
       <input
         name={input.name}
         type="text"
@@ -103,8 +101,8 @@
       />
       <FieldError {meta} />
     </Field>
-    <label for="passwordConfirmation">Confirm New Password</label>
     <Field name="passwordConfirmation" let:input let:meta>
+      <label for="passwordConfirmation">Confirm New Password</label>
       <input
         name={input.name}
         type="text"
@@ -129,15 +127,21 @@
   form {
     padding-top: 2em;
     display: grid;
-    grid-template-columns: 1fr 2fr;
     grid-gap: 1em;
-    width: 600px;
+    width: 100%;
     margin: auto;
   }
 
-  h1,
-  .form-btns {
-    grid-column: span 2;
+  @media only screen and (min-width: 600px) {
+    form {
+      grid-template-columns: 1fr 2fr;
+      max-width: 600px;
+    }
+
+    h1,
+    .form-btns {
+      grid-column: span 2;
+    }
   }
 
   .form-btns {

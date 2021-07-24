@@ -11,3 +11,4 @@ backend/src/main/resources/public/
 !application-dev-TEMPLATE.yaml
 application-dev.yaml
 .idea
+.pnpm-debug.log

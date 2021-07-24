@@ -2,10 +2,12 @@ import { derived, writable } from 'svelte/store'
 
 import { ApiResult } from '@utils/result'
 import { USER_STORAGE_KEY } from '../utils/api'
+import type { Writable } from 'svelte/store'
 import { post } from '@utils/api'
-import { router } from '@utils/router'
 import { routerStore } from './router'
 import { sessionStorage } from '../utils/browserStorage'
+
+export type UserStore = Writable<User>
 
 export type User = {
   email?: string
@@ -31,7 +33,6 @@ export const createUserStore = (initialUser: User) => {
       },
       default: () => {
         user.set({})
-        router.route('/')
       },
     })
   }
@@ -39,7 +40,7 @@ export const createUserStore = (initialUser: User) => {
   const _shouldAuthenticate = derived(
     routerStore,
     ($routerStore) => {
-      if ($routerStore.path === '/') {
+      if ($routerStore.path === '/login') {
         return false
       }
       return true
@@ -75,7 +76,7 @@ export const createUserStore = (initialUser: User) => {
   return {
     ...user,
     subscribe,
-  }
+  } as UserStore
 }
 
 const user = sessionStorage.get(USER_STORAGE_KEY) || {}
@@ -85,3 +86,4 @@ if (user) {
 export const userStore = createUserStore(user)
 
 export const isAdmin = (user: User) => user?.roles && user.roles.includes('admin')
+export const loggedIn = (user: User) => user?.accessToken

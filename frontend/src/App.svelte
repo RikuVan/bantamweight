@@ -1,40 +1,52 @@
 <script lang="ts">
   import { router } from '@utils/router'
   import type { Params } from 'navaid'
-  import { onDestroy, SvelteComponent, setContext } from 'svelte'
+  import { onDestroy, SvelteComponent, setContext, onMount } from 'svelte'
   import Login from '@pages/Login.svelte'
+  import Home from '@pages/Home.svelte'
   import Me from '@pages/Me.svelte'
   import Admin from '@pages/Admin.svelte'
   import { routerStore } from '@store/router'
-  import { userStore } from '@store/user'
+  import { userStore, loggedIn, isAdmin } from '@store/user'
+  import { redirectStore } from '@store/redirect'
   import SnackbarContainer from '@components/snackbar/SnackbarContainer.svelte'
 
   let pageComponent = Login
 
   router
-    .on('/', handleRoute('/', Login))
+    .on('/', handleRoute('/', Home))
+    .on('/login', handleRoute('/login', Login, false))
     .on('/me', handleRoute('/me', Me))
     .on('/admin', handleAdminRoute('/admin', Admin))
     .listen()
 
   setContext('router', routerStore)
-  setContext('navigate', router.route)
 
-  function handleRoute(path: string, page: typeof SvelteComponent) {
+  $: authenticated = loggedIn($userStore)
+  $: admin = isAdmin($userStore)
+  $: if ($redirectStore) router.route($redirectStore)
+
+  function handleRoute(path: string, page: typeof SvelteComponent, auth = true) {
     return (params: Params) => {
-      pageComponent = page
-      $routerStore = {
-        path,
-        params,
+      if (!auth || authenticated) {
+        pageComponent = page
+        $routerStore = {
+          path,
+          params,
+        }
+      } else {
+        router.route('/login')
       }
     }
   }
 
   function handleAdminRoute(path: string, page: typeof SvelteComponent) {
-    if (Array.isArray($userStore.roles) && $userStore.roles.includes('admin')) {
-      return handleRoute(path, page)
-    } else {
-      router.route('/me', true)
+    return (params: Params) => {
+      if (admin) {
+        handleRoute(path, page)(params)
+      } else {
+        router.route('/')
+      }
     }
   }
 
@@ -44,5 +56,5 @@
 </script>
 
 <SnackbarContainer>
-  <svelte:component this={pageComponent} navigate={router.route} />
+  <svelte:component this={pageComponent} />
 </SnackbarContainer>

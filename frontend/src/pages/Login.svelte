@@ -1,14 +1,9 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte'
   import { post } from '@utils/api'
   import { ApiResult } from '@utils/result'
   import { LockOpen, BoxingGloves } from '@components/icons'
   import { userStore } from '@store/user'
-  import type { User } from '../store/user'
-
-  type Navigate = (uri: string, replace?: boolean) => void
-
-  const navigate: Navigate = getContext('router')
+  import type { User } from '@store/user'
 
   let email = ''
   let password = ''
@@ -18,16 +13,6 @@
   let errors: Errors = {}
 
   type Errors = { email?: string; password?: string }
-
-  onMount(() => {
-    const unsubscribe = userStore.subscribe((user: User) => {
-      if (user?.accessToken) {
-        isSuccess = true
-        navigate('/me')
-      }
-    })
-    return () => unsubscribe()
-  })
 
   async function handleSubmit() {
     errors = {}
@@ -46,7 +31,6 @@
           $userStore = data
           isSuccess = true
           isLoading = false
-          navigate('/me')
         },
         NotFound: () => {
           $userStore = {}

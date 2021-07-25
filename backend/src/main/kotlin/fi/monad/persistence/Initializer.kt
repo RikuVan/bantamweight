@@ -14,7 +14,6 @@ fun initializeDatabase(deps: AppDependencies) {
     if (users.isEmpty()) {
         db.userQueries.insertUser("Richard", "Van Camp", "richard@gmail.com", pwd.encryptPassword("password"))
         val user = db.userQueries.fetchLastUserId().executeAsOneOrNull()
-        println(user?.id)
         if (user?.id != null) {
             db.userQueries.insertUserRole(user.id, "admin")
         }

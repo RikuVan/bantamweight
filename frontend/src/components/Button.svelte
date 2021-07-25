@@ -4,9 +4,10 @@
   export let type = 'button'
   export let reverse = false
   export let disabled = false
+  export let small = false
 </script>
 
-<button on:click {type} class={_class} class:reverse {disabled}>
+<button on:click {type} class={_class} class:reverse class:small {disabled}>
   <slot />
 </button>
 
@@ -24,7 +25,7 @@
   }
 
   button:disabled {
-    opacity: 0.9;
+    opacity: 0.7;
     cursor: none;
   }
 
@@ -32,6 +33,11 @@
     background: #fff;
     border: 3px solid var(--black);
     color: var(--black);
+  }
+
+  .small {
+    padding: 4px;
+    border-width: 2px;
   }
 
   button:hover {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SnackbarOptions } from './types'
   import { setContext } from 'svelte'
-  import Snackbar from './index.svelte'
+  import Snackbar from './Snackbar.svelte'
   import snackbarContextKey from './SnackbarContextKey'
   import { SnackbarPosition } from './SnackbarPosition'
 

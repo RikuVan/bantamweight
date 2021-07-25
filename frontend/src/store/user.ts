@@ -1,7 +1,7 @@
 import { derived, writable } from 'svelte/store'
 
 import { ApiResult } from '@utils/result'
-import { USER_STORAGE_KEY } from '../utils/api'
+import { USER_STORAGE_KEY } from '@utils/api'
 import type { Writable } from 'svelte/store'
 import { post } from '@utils/api'
 import { routerStore } from './router'

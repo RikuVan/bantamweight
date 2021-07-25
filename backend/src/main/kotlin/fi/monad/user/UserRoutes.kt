@@ -19,6 +19,9 @@ import org.http4k.routing.bind
 
 
 val usersResponseLens = Body.auto<List<UserListItemOut>>().toLens()
+val userLens = Body.auto<UserIn>().toLens()
+val userUpdateLens = Body.auto<UserDetailsIn>().toLens()
+val rolesLens = Body.auto<List<String>>().toLens()
 val loginRequestLens = Body.auto<Credentials>().toLens()
 val loginResponseLens = Body.auto<UserOut>().toLens()
 val errorResponseLens = Body.auto<ErrorDetails>().toLens()
@@ -34,11 +37,52 @@ data class ErrorDetails(val message: String?)
 
 fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHttpHandler {
 
+    val adminFilter = AuthFilter(deps.tokenHandler, isAdmin)
+
     val users: HttpHandler = { request ->
         deps.userRepository.fetchAll().fold(
             { users ->
                 Response(Status.OK).with(
                     usersResponseLens of users.toDTO()
+                )
+            },
+            {
+                Response(Status.NOT_FOUND).with(
+                    errorResponseLens of ErrorDetails(it.toString())
+                )
+            }
+        )
+
+    }
+
+    val newUser: HttpHandler = { request ->
+        val user = userLens(request)
+        user.password = deps.passwordEncryption.encryptPassword(user.password)
+        deps.userRepository.add(user).fold(
+            { updated ->
+                if (updated) Response(Status.OK) else Response(Status.INTERNAL_SERVER_ERROR)
+            },
+            { Response(Status.BAD_REQUEST) }
+        )
+
+    }
+
+    val updateUser: HttpHandler = { request ->
+        val user = userUpdateLens(request)
+        deps.userRepository.update(user).fold(
+            { updated ->
+                if (updated) Response(Status.OK) else Response(Status.INTERNAL_SERVER_ERROR)
+            },
+            { Response(Status.BAD_REQUEST) }
+        )
+
+    }
+
+    val roles: HttpHandler = { request ->
+        deps.userRepository.fetchAllRoles().fold(
+            { roles ->
+                Response(Status.OK).with(
+                    rolesLens of roles
                 )
             },
             {
@@ -116,7 +160,10 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
     }
 
     return "/users" bind routes(
-        "" bind Method.GET to AuthFilter(deps.tokenHandler, isAdmin).then(users),
+        "" bind Method.GET to adminFilter.then(users),
+        "" bind Method.PUT to adminFilter.then(updateUser),
+        "" bind Method.POST to adminFilter.then(newUser),
+        "/roles" bind Method.GET to adminFilter.then(roles),
         "/login" bind Method.POST to login,
         "/logout" bind Method.POST to logout,
         "/refresh" bind Method.POST to refresh,

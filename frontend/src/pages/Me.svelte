@@ -8,8 +8,10 @@
   import Button from '@components/Button.svelte'
   import { post } from '@utils/api'
   import { ApiResult } from '@utils/result'
-  import snackbarContextKey from '@components/snackbar/SnackbarContextKey'
+  import { SnackbarContextKey } from '@components/snackbar'
   import type { SnackbarOptions } from '@components/snackbar/types'
+  import Form from '@components/Form.svelte'
+  import FormButtons from '@components/FormButtons.svelte'
 
   let isLoading = false
 
@@ -25,7 +27,7 @@
     passwordConfirmation: '',
   }
 
-  let formStore = createFormStore<FormValues>({
+  const formStore = createFormStore<FormValues>({
     initialValues,
     onSubmit,
   })
@@ -34,7 +36,7 @@
   setContext('form', formStore)
 
   const showSnackbar =
-    getContext<(props: Partial<SnackbarOptions>) => { close: VoidFunction }>(snackbarContextKey)
+    getContext<(props: Partial<SnackbarOptions>) => { close: VoidFunction }>(SnackbarContextKey)
 
   async function onSubmit(values: FormValues) {
     isLoading = true
@@ -73,8 +75,7 @@
 </script>
 
 <Layout>
-  <form on:submit|preventDefault={form.submit}>
-    <h1>Change your password</h1>
+  <Form onSubmit={form.submit} title="Change your password">
     <Field name="oldPassword" let:input let:meta>
       <label for="oldPassword">Current Password</label>
       <input
@@ -84,7 +85,7 @@
         disabled={isLoading}
         on:blur={input.onBlur}
         on:focus={input.onFocus}
-        on:input={({ target }) => input.onChange(target.value)}
+        on:input={({ currentTarget }) => input.onChange(currentTarget.value)}
       />
       <FieldError {meta} />
     </Field>
@@ -97,7 +98,7 @@
         disabled={isLoading}
         on:blur={input.onBlur}
         on:focus={input.onFocus}
-        on:input={({ target }) => input.onChange(target.value)}
+        on:input={({ currentTarget }) => input.onChange(currentTarget.value)}
       />
       <FieldError {meta} />
     </Field>
@@ -110,58 +111,15 @@
         disabled={isLoading}
         on:blur={input.onBlur}
         on:focus={input.onFocus}
-        on:input={({ target }) => input.onChange(target.value)}
+        on:input={({ currentTarget }) => input.onChange(currentTarget.value)}
       />
       <FieldError {meta} />
     </Field>
-    <div class="form-btns">
+    <FormButtons>
       <Button type="submit" disabled={isLoading}>
         {#if isLoading}Logging in...{:else}Submit{/if}</Button
       >
       <Button reverse on:click={reset} disabled={isLoading}>Reset</Button>
-    </div>
-  </form>
+    </FormButtons>
+  </Form>
 </Layout>
-
-<style>
-  form {
-    padding-top: 2em;
-    display: grid;
-    grid-gap: 1em;
-    width: 100%;
-    margin: auto;
-  }
-
-  @media only screen and (min-width: 600px) {
-    form {
-      grid-template-columns: 1fr 2fr;
-      max-width: 600px;
-    }
-
-    h1,
-    .form-btns {
-      grid-column: span 2;
-    }
-  }
-
-  .form-btns {
-    margin-left: auto;
-  }
-
-  :global(button + button) {
-    margin-left: 8px;
-  }
-
-  input {
-    background: var(--light-gray);
-  }
-
-  input:focus {
-    background: var(--lighter-gray);
-  }
-
-  input:disabled {
-    opacity: 0.9;
-    cursor: none;
-  }
-</style>

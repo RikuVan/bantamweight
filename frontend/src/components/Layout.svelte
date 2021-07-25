@@ -1,8 +1,7 @@
 <script lang="ts">
   import { userStore } from '@store/user'
   import { BoxingGloves } from '@components/icons'
-  import Hamburger from '@components/nav/hamburger.svelte'
-  import Nav from '@components/nav/index.svelte'
+  import { Nav, Hamburger } from '@components/nav/index'
 
   let open = false
 
@@ -62,5 +61,10 @@
   main {
     padding: 2em;
     max-width: 1200px;
+    margin: auto;
+  }
+
+  main > * {
+    width: 100%;
   }
 </style>

@@ -4,7 +4,9 @@ import fi.monad.bantamweight.database.FetchAllUsers
 
 data class Credentials(val email: String, val password: String)
 
-data class UserIn(val email: String, val firstName: String, val lastName: String, val password: String)
+data class UserIn(val email: String, val firstName: String, val lastName: String, var password: String, val roles: List<String>)
+
+data class UserDetailsIn(val id: Long, val email: String, val firstName: String, val lastName: String)
 
 data class UserOut(
     val email: String,
@@ -15,6 +17,7 @@ data class UserOut(
 )
 
 data class UserListItemOut(
+    val id: Long,
     val email: String,
     val firstName: String,
     val lastName: String,
@@ -23,6 +26,7 @@ data class UserListItemOut(
 
 fun List<FetchAllUsers>.toDTO(): List<UserListItemOut> = map {
     UserListItemOut(
+        it.id,
         it.email,
         it.first_name,
         it.last_name,

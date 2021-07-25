@@ -3,7 +3,7 @@
   import { isAdmin, userStore } from '@store/user'
   import { post } from '@utils/api'
   import { ApiResult } from '@utils/result'
-  import { router } from '@utils/router'
+  import { Logout } from '../icons'
 
   const mediaQuery = '(max-width: 600px)'
 
@@ -40,6 +40,9 @@
 <nav>
   <ul>
     <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
       <a href="/me">Me</a>
     </li>
     {#if adminUser}
@@ -50,7 +53,10 @@
   </ul>
   <ul class="actions">
     <li>
-      <button on:click={logout}>Logout</button>
+      <button on:click={logout}>
+        <Logout />
+        Logout
+      </button>
     </li>
   </ul>
 </nav>
@@ -71,7 +77,7 @@
   nav {
     display: grid;
     grid-gap: 1px;
-    grid-template-rows: minmax(350px, auto) minmax(80px, auto) minmax(80px, auto);
+    grid-template-rows: minmax(450px, auto) minmax(80px, auto);
     align-content: center;
     background: var(--black);
     font-weight: 600;
@@ -88,8 +94,8 @@
   @media only screen and (min-width: 600px) {
     nav {
       position: absolute;
-      grid-template-rows: 420px 100px 100px;
-      height: 690px;
+      grid-template-rows: 350px 100px;
+      height: 480px;
       width: 376px;
       left: auto;
       top: 10px;
@@ -120,11 +126,11 @@
   }
 
   ul.actions {
+    padding-top: 40px;
     width: 100%;
     height: 100%;
-    justify-content: start;
+    justify-content: center;
     position: relative;
-
     border-top: 1px solid var(--gray);
   }
 

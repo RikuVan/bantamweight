@@ -30,6 +30,10 @@ SELECT u.id, u.email, u.first_name, u.last_name,
 FROM user u;
 
 fetchUserByEmail:
+SELECT id, email, first_name, last_name, password
+FROM user WHERE email = ?;
+
+fetchUserWithRolesByEmail:
 SELECT u.id, u.email, u.first_name, u.last_name, u.password,
     (SELECT GROUP_CONCAT(ur.role_name) || "" FROM user_role ur WHERE u.id = ur.user_id ) roles
 FROM user u WHERE email = ?;
@@ -41,6 +45,9 @@ VALUES (?, ?, ?, ?);
 
 updateUserPassword:
 UPDATE user SET password = ? WHERE email = ?;
+
+updateUser:
+UPDATE user SET first_name = ?, last_name = ?, email = ?  WHERE id = ?;
 
 fetchAllRoles:
 SELECT * FROM role;

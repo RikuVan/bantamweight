@@ -9,7 +9,8 @@
   import { routerStore } from '@store/router'
   import { userStore, loggedIn, isAdmin } from '@store/user'
   import { redirectStore } from '@store/redirect'
-  import SnackbarContainer from '@components/snackbar/SnackbarContainer.svelte'
+  import { SnackbarContainer } from '@components/snackbar'
+  import { USER_STORAGE_KEY } from '@utils/api'
 
   let pageComponent = Login
 
@@ -22,13 +23,12 @@
 
   setContext('router', routerStore)
 
-  $: authenticated = loggedIn($userStore)
-  $: admin = isAdmin($userStore)
   $: if ($redirectStore) router.route($redirectStore)
 
   function handleRoute(path: string, page: typeof SvelteComponent, auth = true) {
     return (params: Params) => {
-      if (!auth || authenticated) {
+      const authenticated = !auth || loggedIn($userStore || sessionStorage.get(USER_STORAGE_KEY))
+      if (authenticated) {
         pageComponent = page
         $routerStore = {
           path,
@@ -42,7 +42,8 @@
 
   function handleAdminRoute(path: string, page: typeof SvelteComponent) {
     return (params: Params) => {
-      if (admin) {
+      const authorized = isAdmin($userStore || sessionStorage.get(USER_STORAGE_KEY))
+      if (authorized) {
         handleRoute(path, page)(params)
       } else {
         router.route('/')

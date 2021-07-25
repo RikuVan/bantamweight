@@ -16,7 +16,9 @@
 
 <style>
   .error {
-    color: var(--error-color);
-    padding: 8px;
+    color: red;
+    padding: 2px;
+    margin-top: -16px;
+    margin-left: 2px;
   }
 </style>

@@ -15,6 +15,8 @@ import org.http4k.core.cookie.replaceCookie
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
+import org.http4k.lens.Path
+import org.http4k.lens.long
 import org.http4k.routing.bind
 
 
@@ -27,6 +29,7 @@ val loginResponseLens = Body.auto<UserOut>().toLens()
 val errorResponseLens = Body.auto<ErrorDetails>().toLens()
 val passwordChangeLens = Body.auto<NewPasswordIn>().toLens()
 
+val userId = Path.long().of("id")
 
 data class ErrorDetails(val message: String?)
 
@@ -68,8 +71,9 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
     }
 
     val updateUser: HttpHandler = { request ->
+        val userId = userId(request)
         val user = userUpdateLens(request)
-        deps.userRepository.update(user).fold(
+        deps.userRepository.update(userId, user).fold(
             { updated ->
                 if (updated) Response(Status.OK) else Response(Status.INTERNAL_SERVER_ERROR)
             },
@@ -161,7 +165,7 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
 
     return "/users" bind routes(
         "" bind Method.GET to adminFilter.then(users),
-        "" bind Method.PUT to adminFilter.then(updateUser),
+        "/{id}" bind Method.PUT to adminFilter.then(updateUser),
         "" bind Method.POST to adminFilter.then(newUser),
         "/roles" bind Method.GET to adminFilter.then(roles),
         "/login" bind Method.POST to login,

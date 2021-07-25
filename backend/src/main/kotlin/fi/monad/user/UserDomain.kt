@@ -6,7 +6,7 @@ data class Credentials(val email: String, val password: String)
 
 data class UserIn(val email: String, val firstName: String, val lastName: String, var password: String, val roles: List<String>)
 
-data class UserDetailsIn(val id: Long, val email: String, val firstName: String, val lastName: String)
+data class UserDetailsIn(val id: Long, val email: String, val firstName: String, val lastName: String, val roles: List<String>)
 
 data class UserOut(
     val email: String,

@@ -38,7 +38,7 @@
 
   const initialValues = {
     email: '',
-    firstNames: '',
+    firstName: '',
     lastName: '',
     roles: [],
   }
@@ -96,7 +96,7 @@
             {:else}
               <div />
             {/if}
-            <span on:click={() => startEditing(id)}>
+            <span class="edit" on:click={() => startEditing(id)}>
               <Edit width="20" height="20" />
             </span>
           </Item>
@@ -121,5 +121,9 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: 1em;
+  }
+
+  .edit:hover {
+    cursor: pointer;
   }
 </style>

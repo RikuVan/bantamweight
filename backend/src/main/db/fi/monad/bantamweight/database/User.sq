@@ -58,6 +58,9 @@ INSERT INTO role(name) VALUES (?);
 deleteRole:
 DELETE FROM role WHERE name = ?;
 
+fetchAllUserRolesForUser:
+SELECT role_name FROM user_role WHERE user_id = ?;
+
 insertUserRole:
 INSERT INTO user_role(user_id, role_name)
 VALUES (?, ?);

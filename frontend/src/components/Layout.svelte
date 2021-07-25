@@ -63,8 +63,4 @@
     max-width: 1200px;
     margin: auto;
   }
-
-  main > * {
-    width: 100%;
-  }
 </style>

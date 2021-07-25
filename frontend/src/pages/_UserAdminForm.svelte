@@ -42,18 +42,19 @@
       }
   }
 
-  const formStore = createFormStore<UserUpdateByAdmin>({
+  let formStore = createFormStore<UserUpdateByAdmin>({
     initialValues,
     onSubmit,
     validate,
   })
+
+  $: form.setConfig('initialValues', initialValues)
 
   const { form, state } = formStore
   setContext('form', formStore)
 
   function updateRoles(target: EventTarget, values: string[]) {
     const { checked, value } = target as HTMLInputElement
-    console.log('here', checked, value)
     if (!checked) {
       return values.filter((v) => v !== value)
     }

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte'
   import type { GetFieldValidator } from 'final-form'
-  import type { ArrayMutators } from '../stores/form'
-  import type { FormStore, ReadableField } from '../stores/form'
+  import type { ArrayMutators } from '../store/form'
+  import type { FormStore, ReadableField } from '../store/form'
 
   export let validate: ReturnType<GetFieldValidator<any>> = () => undefined
   export let parse: (value: any, name: string) => any = undefined

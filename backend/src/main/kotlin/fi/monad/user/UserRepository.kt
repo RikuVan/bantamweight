@@ -22,21 +22,31 @@ class UserRepository(private val db: Database) {
     }
 
     fun add(user: UserIn): Result<Boolean, Throwable> = runCatching {
-        println(user)
         db.userQueries.transactionWithResult {
             db.userQueries.insertUser(user.firstName, user.lastName, user.email, user.password)
             db.userQueries.fetchUserByEmail(user.email).executeAsOneOrNull()?.let {
-                println(it)
-                user.roles.forEach {role -> db.userQueries.insertUserRole(it.id, role) }
+                user.roles.forEach { role -> db.userQueries.insertUserRole(it.id, role) }
             } ?: rollback(false)
             user != null
         }
     }
 
-    fun update(user: UserDetailsIn): Result<Boolean, Throwable> = runCatching {
-        db.userQueries.updateUser(user.firstName, user.lastName, user.email, user.id)
-        val user = db.userQueries.fetchUserByEmail(user.email).executeAsOneOrNull()
-        user != null
+    fun update(id: Long, user: UserDetailsIn): Result<Boolean, Throwable> = runCatching {
+        db.userQueries.transactionWithResult {
+            db.userQueries.updateUser(user.firstName, user.lastName, user.email, id)
+            val currentRoles = db.userQueries.fetchAllUserRolesForUser(id).executeAsList()
+            val rolesToRemove = currentRoles.minus(user.roles)
+            val rolesToAdd = user.roles.minus(currentRoles)
+            rolesToRemove.forEach {
+                db.userQueries.deleteUserRole(id, it)
+            }
+            rolesToAdd.forEach {
+                db.userQueries.insertUserRole(id, it)
+            }
+            db.userQueries.fetchUserWithRolesByEmail(user.email).executeAsOneOrNull()?.let {
+                true
+            } ?: rollback(false)
+        }
     }
 
     fun fetchAllRoles(): Result<List<String>, Throwable> = runCatching {

@@ -49,6 +49,13 @@ class UserRepository(private val db: Database) {
         }
     }
 
+    fun remove(id: Long): Result<Unit, Throwable> = runCatching {
+        db.userQueries.transaction {
+            db.userQueries.deleteAllUserRoles(id)
+            db.userQueries.deleteUser(id)
+        }
+    }
+
     fun fetchAllRoles(): Result<List<String>, Throwable> = runCatching {
         db.userQueries.fetchAllRoles().executeAsList()
     }

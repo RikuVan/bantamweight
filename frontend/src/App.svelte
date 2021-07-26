@@ -5,7 +5,7 @@
   import Login from '@pages/Login.svelte'
   import Home from '@pages/Home.svelte'
   import Me from '@pages/Me.svelte'
-  import Admin from '@pages/Admin.svelte'
+  import Admin from '@pages/admin/Admin.svelte'
   import { routerStore } from '@store/router'
   import { userStore, loggedIn, isAdmin } from '@store/user'
   import { redirectStore } from '@store/redirect'

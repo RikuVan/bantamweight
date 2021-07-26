@@ -107,7 +107,7 @@
       {#if newUser}
         <UserAdminForm {roles} on:done={reset} />
       {:else}
-        <ExistingUserAdmin userDetails={values} on:done={reset} {roles} />
+        <ExistingUserAdmin email={values.email} userDetails={values} on:done={reset} {roles} />
       {/if}
     {/if}
   {:catch err}

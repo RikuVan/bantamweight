@@ -80,7 +80,7 @@
       <label for="oldPassword">Current Password</label>
       <input
         name={input.name}
-        type="text"
+        type="password"
         value={input.value}
         disabled={isLoading}
         on:blur={input.onBlur}
@@ -93,7 +93,7 @@
       <label for="newPassword">New Password</label>
       <input
         name={input.name}
-        type="text"
+        type="password"
         value={input.value}
         disabled={isLoading}
         on:blur={input.onBlur}
@@ -106,7 +106,7 @@
       <label for="passwordConfirmation">Confirm New Password</label>
       <input
         name={input.name}
-        type="text"
+        type="password"
         value={input.value}
         disabled={isLoading}
         on:blur={input.onBlur}
@@ -119,7 +119,7 @@
       <Button type="submit" disabled={isLoading}>
         {#if isLoading}Logging in...{:else}Submit{/if}</Button
       >
-      <Button reverse on:click={reset} disabled={isLoading}>Reset</Button>
+      <Button reverse on:click={reset} disabled={isLoading}>Quit</Button>
     </FormButtons>
   </Form>
 </Layout>

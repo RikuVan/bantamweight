@@ -13,7 +13,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import UserAdminForm from './_UserAdminForm.svelte'
-  import { Tabs, Tab } from '@components/tabs/index'
+  import { Tabs, Tab } from '@components/tabs'
+  import RemoveUser from './_RemoveUser.svelte'
 
   const dispatch = createEventDispatcher()
 
@@ -34,14 +35,14 @@
 </script>
 
 <div class="tab-container">
-  <Tabs bind:active={activeTab}>
+  <Tabs bind:active={activeTab} full>
     <Tab>Update details</Tab>
     <Tab>Change password</Tab>
     <Tab>Remove</Tab>
   </Tabs>
 </div>
 
-<div class="tabs">
+<div class="panes">
   {#if activeTab === 0}
     <UserAdminForm inputs="details" {userDetails} on:done={handleDone} {roles} />
   {/if}
@@ -49,7 +50,7 @@
     <UserAdminForm {email} inputs="password" on:done={handleDone} {roles} />
   {/if}
   {#if activeTab === 2}
-    remove user form
+    <RemoveUser id={userDetails.id} email={userDetails.email} on:done={handleDone} />
   {/if}
 </div>
 
@@ -57,5 +58,8 @@
   .tab-container {
     padding-top: 2em;
     display: flex;
+    margin: auto;
+    width: 100%;
+    max-width: 600px;
   }
 </style>

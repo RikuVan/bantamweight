@@ -4,6 +4,10 @@
   import { post } from '@utils/api'
   import { ApiResult } from '@utils/result'
   import { Logout } from '../icons'
+  import { clickOutside } from '@utils/clickOutide'
+
+  export let open = false
+  export let close: Function
 
   const mediaQuery = '(max-width: 600px)'
 
@@ -37,29 +41,31 @@
   $: adminUser = isAdmin($userStore)
 </script>
 
-<nav>
-  <ul>
-    <li>
-      <a href="/">Home</a>
-    </li>
-    <li>
-      <a href="/me">Me</a>
-    </li>
-    {#if adminUser}
+{#if open}
+  <nav use:clickOutside={{ enabled: open, cb: close }}>
+    <ul>
       <li>
-        <a href="/admin">Admin</a>
+        <a href="/">Home</a>
       </li>
-    {/if}
-  </ul>
-  <ul class="actions">
-    <li>
-      <button on:click={logout}>
-        <Logout />
-        Logout
-      </button>
-    </li>
-  </ul>
-</nav>
+      <li>
+        <a href="/me">Me</a>
+      </li>
+      {#if adminUser}
+        <li>
+          <a href="/admin">Admin</a>
+        </li>
+      {/if}
+    </ul>
+    <ul class="actions">
+      <li>
+        <button on:click={logout}>
+          <Logout />
+          Logout
+        </button>
+      </li>
+    </ul>
+  </nav>
+{/if}
 
 <style>
   li > button {

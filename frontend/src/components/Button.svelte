@@ -40,7 +40,7 @@
     border-width: 2px;
   }
 
-  button:hover {
+  button:hover:not(:disabled) {
     opacity: 0.9;
   }
 </style>

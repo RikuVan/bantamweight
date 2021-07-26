@@ -19,9 +19,7 @@
     </user->
   </div>
   <Hamburger bind:open />
-  {#if open}
-    <Nav />
-  {/if}
+  <Nav {open} close={() => (open = false)} />
 </header>
 <main>
   <slot />

@@ -1,7 +1,17 @@
 package fi.monad.user
 
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.binding
 import com.github.michaelbull.result.flatMap
 import com.github.michaelbull.result.fold
+import com.github.michaelbull.result.map
+import com.github.michaelbull.result.mapBoth
+import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.or
+import com.github.michaelbull.result.orElse
+import okio.Okio
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.routing.RoutingHttpHandler
@@ -79,7 +89,14 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
             },
             { Response(Status.BAD_REQUEST) }
         )
+    }
 
+    val removeUser: HttpHandler = { request ->
+        val userId = userId(request)
+        deps.userRepository.remove(userId).fold(
+            { Response(Status.OK) },
+            { Response(Status.BAD_REQUEST) }
+        )
     }
 
     val roles: HttpHandler = { request ->
@@ -95,7 +112,6 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
                 )
             }
         )
-
     }
 
     val login: HttpHandler = { request ->
@@ -149,7 +165,19 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
 
     val passwordChange: HttpHandler = { request ->
         val changeReq = passwordChangeLens(request)
-        deps.authService.verify(changeReq.email, changeReq.oldPassword ?: "").flatMap {
+
+        val isAdmin = deps.tokenHandler.readAccessToken(request.accessToken as String).filterAdmin()
+
+        val checkpasswords by lazy {
+            deps.authService.verify(
+                changeReq.email,
+                changeReq.oldPassword ?: ""
+            )
+        }
+
+        // an admin can change password without providing old password, otherwise it should be checked
+        // the user is changing own password
+        isAdmin.orElse { checkpasswords }.flatMap {
             deps.userRepository.updatePassword(
                 deps.passwordEncryption.encryptPassword(changeReq.newPassword),
                 changeReq.email
@@ -166,6 +194,7 @@ fun UserRoutes(deps: UserDependencies = object : UserDependencies {}): RoutingHt
     return "/users" bind routes(
         "" bind Method.GET to adminFilter.then(users),
         "/{id}" bind Method.PUT to adminFilter.then(updateUser),
+        "/{id}" bind Method.DELETE to adminFilter.then(removeUser),
         "" bind Method.POST to adminFilter.then(newUser),
         "/roles" bind Method.GET to adminFilter.then(roles),
         "/login" bind Method.POST to login,

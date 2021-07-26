@@ -34,4 +34,4 @@ fun List<FetchAllUsers>.toDTO(): List<UserListItemOut> = map {
     )
 }
 
-data class NewPasswordIn(val email: String, val oldPassword: String, val newPassword: String)
+data class NewPasswordIn(val email: String, val oldPassword: String?, val newPassword: String)

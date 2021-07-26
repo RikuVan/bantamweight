@@ -62,10 +62,11 @@
   }
 
   const routes = {
-    all: (payload: Partial<UserUpdateByAdmin>) => post('/users', payload),
+    all: ({ passwordConfirmation, ...payload }: Partial<UserUpdateByAdmin>) =>
+      post('/users', payload),
     details: (payload: Partial<UserUpdateByAdmin>) => put(`/users/${payload.id}`, payload),
     password: ({ password }: { password: string }) =>
-      post('/users/change-password', {
+      post('/users/password-change', {
         email,
         newPassword: password,
         oldPassword: null,
@@ -117,13 +118,11 @@
       if (!values.password || values.password.length < 8) {
         errors['password'] = 'Password must be at least 8 characters long'
       }
-    }
-
-    if (inputs === 'password') {
       if (!values.passwordConfirmation || values.passwordConfirmation !== values.password) {
         errors['passwordConfirmation'] = 'Passwords must match'
       }
     }
+
     return errors
   }
 
@@ -217,6 +216,21 @@
   {#if inputs === 'all' || inputs === 'password'}
     <Field name="password" let:input let:meta>
       <label for="password">Password</label>
+      <div>
+        <input
+          name={input.name}
+          type="password"
+          value={input.value}
+          disabled={loading}
+          on:blur={input.onBlur}
+          on:focus={input.onFocus}
+          on:input={({ currentTarget }) => input.onChange(currentTarget.value)}
+        />
+        <FieldError {meta} />
+      </div>
+    </Field>
+    <Field name="passwordConfirmation" let:input let:meta>
+      <label for="passwordConfirmation">Confirm password</label>
       <div>
         <input
           name={input.name}

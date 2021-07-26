@@ -68,6 +68,9 @@ VALUES (?, ?);
 deleteUserRole:
 DELETE FROM user_role WHERE user_id = ? AND role_name = ?;
 
+deleteAllUserRoles:
+DELETE FROM user_role WHERE user_id = ?;
+
 deleteUser:
 DELETE FROM user WHERE id = ?;
 

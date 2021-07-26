@@ -7,39 +7,37 @@
   $: active = $activeTab === tabid || $activeTab === id
 </script>
 
-<!--TODO: write issue to chota to replace a by span-->
-<a
-  href="/"
+<span
+  class="tab"
   class:active
   {...$$restProps}
   on:click|preventDefault={() => activeTab.set(tabid === false ? id : tabid)}
 >
   <slot />
-</a>
+</span>
 
 <style>
-  a {
+  .tab {
     text-decoration: none;
     padding: 1rem 2rem;
     flex: 0 1 auto;
-    color: var(--light-gray);
+    color: var(--black);
     border-bottom: 2px solid var(--light-gray);
     text-align: center;
   }
 
-  a[aria-current='page'],
-  a.active,
-  a:hover {
+  .tab.active,
+  .tab:hover {
     opacity: 1;
     border-bottom: 2px solid var(--gray);
   }
 
-  a[aria-current='page'],
-  a.active {
-    border-color: var(--orange);
+  .tab.active {
+    color: var(--orange);
+    border-color: var(--gray);
   }
 
-  a {
+  :global(.is-full > .tab) {
     flex: 1 1 auto;
   }
 </style>

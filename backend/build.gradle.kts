@@ -1,5 +1,13 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    application
+    kotlin("jvm") version "1.4.32"
+    id("com.squareup.sqldelight")
+    id("com.github.johnrengelman.shadow")
+}
+
+group = "fi.monad"
 
 repositories {
     mavenCentral()
@@ -12,16 +20,6 @@ repositories {
     maven {
         url = uri("https://cache-redirector.jetbrains.com/intellij-dependencies")
     }
-}
-
-group = "fi.monad"
-version = "0.0.1-SNAPSHOT"
-
-plugins {
-    kotlin("jvm") version "1.4.32"
-    id("com.github.johnrengelman.shadow")
-    id("com.squareup.sqldelight")
-    application
 }
 
 dependencies {
@@ -44,33 +42,36 @@ dependencies {
     testImplementation(Libs.junit_jupiter_engine)
 }
 
-application {
-    mainClassName = "fi.monad.bantamweight.Main.Kt"
-}
-
-configure<SourceSetContainer> {
-    named("main") {
-        java.srcDir("src/core/kotlin")
-    }
-}
-
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+application {
+    mainClassName = "fi.monad.MainKt"
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs += listOf(
+                "-Xjsr305=strict"
+            )
+        }
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+        archiveBaseName.set(project.name)
+        mergeServiceFiles()
+    }
 }
 
-tasks.withType<ShadowJar> {
-    archiveBaseName.set("Bantamweight")
-    mergeServiceFiles()
-}
 
 sqldelight {
     database("Database") {
@@ -82,4 +83,3 @@ sqldelight {
     }
     linkSqlite = false
 }
-

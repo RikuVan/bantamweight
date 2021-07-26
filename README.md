@@ -10,6 +10,8 @@ This app is still under development but it already includes a good part of the f
 
 ## Backend
 
+Use the `application-dev-TEMPLATE.yaml` to create your own `application-dev.yaml`, providing environment for development.
+
 ...start the backend
 
 ```

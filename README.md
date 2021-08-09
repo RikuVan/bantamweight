@@ -15,7 +15,7 @@ Use the `application-dev-TEMPLATE.yaml` to create your own `application-dev.yaml
 ...start the backend
 
 ```
-  ./gradlew shadowJar
+  ./gradlew runShadow
 ```
 
 The app will be available at [localhost:9000](http://localhost:9000)
@@ -29,7 +29,7 @@ To make the app even lighter-weight, I have used `sqlite` with [sqldelight](http
 ...to run in development
 
 ```
-  cd frontend && pnpm run install && pnpm run dev
+  cd frontend && pnpm install && pnpm run dev
 ```
 
 This will proxy requests from the frontend through a development server. If you build the app with `pnpm run build`, you can see the app served from [localhost:9000](http://localhost:9000)

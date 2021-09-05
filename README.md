@@ -38,6 +38,21 @@ This [Svelte](https://svelte.dev/) + [Vite](https://vitejs.dev/config/#config-fi
 
 If you feel the need for a Svelte component library, [Carbon components Svelte](https://github.com/IBM/carbon-components-svelte) is fairly large and has typescript definitions.
 
+## Docker Hub
+
+Make sure you set the DOCKERHUB_USERNAME and DOCKERHUB_PASSWORD in your env. Build and deploy an image to docker hub using jib...
+
+```
+./gradlew jib
+```
+
+Then pull the image and run it...
+
+```
+docker pull rikuvan/bantamweight
+docker run -v /path/to/bantamweight.db:/path/to/bantamweight.db -p 9000:9000 rikuvan/bantamweight
+```
+
 ## Deployment
 
 TODO: digital ocean maybe?

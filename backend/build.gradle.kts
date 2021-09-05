@@ -2,12 +2,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
+
     kotlin("jvm") version "1.4.32"
     id("com.squareup.sqldelight")
     id("com.github.johnrengelman.shadow")
+    id("com.google.cloud.tools.jib")
 }
 
+
 group = "fi.monad"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -70,16 +74,41 @@ tasks {
         archiveBaseName.set(project.name)
         mergeServiceFiles()
     }
-}
 
-
-sqldelight {
-    database("Database") {
-        packageName = "fi.monad.bantamweight"
-        sourceFolders = listOf("db")
-        schemaOutputDirectory = file("src/main/db/schema")
-        dialect = "sqlite:3.25"
-        verifyMigrations = true
+    jib {
+        container {
+            mainClass = "fi.monad.MainKt"
+            jvmFlags = listOf(
+                "-server",
+                "-Djava.awt.headless=true",
+                "-XX:InitialRAMFraction=2",
+                "-XX:MinRAMFraction=2",
+                "-XX:MaxRAMFraction=2",
+                "-XX:+UseG1GC",
+                "-XX:MaxGCPauseMillis=100",
+                "-XX:+UseStringDeduplication"
+            )
+            workingDirectory = "/webservice"
+            ports = listOf("8080")
+        }
+        to {
+            image = "rikuvan/bantamweight"
+            auth {
+                username = System.getenv("DOCKERHUB_USERNAME")
+                password = System.getenv("DOCKERHUB_PASSWORD")
+            }
+        }
     }
-    linkSqlite = false
+
+    sqldelight {
+        database("Database") {
+            packageName = "fi.monad.bantamweight"
+            sourceFolders = listOf("db")
+            schemaOutputDirectory = file("src/main/db/schema")
+            dialect = "sqlite:3.25"
+            verifyMigrations = true
+        }
+        linkSqlite = false
+    }
 }
+

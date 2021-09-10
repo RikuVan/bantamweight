@@ -46,4 +46,4 @@ jobs:
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           cd ./backend
-          ./gradlew jib
+          ./gradlew jib --stacktrace

@@ -2,10 +2,11 @@ name: Push image to docker hub
 on:
   push:
     branches:
-      - deploy
+      - master
 
 jobs:
   deploy:
+    environment: deploy
     runs-on: ubuntu-latest
 
     steps:

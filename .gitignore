@@ -8,7 +8,7 @@ dist/
 bantamweight.db
 backend/src/main/resources/public/
 .env
-!application-dev-TEMPLATE.yaml
-application-dev.yaml
+!application-dev.yaml
+application.yaml
 .idea
 .pnpm-debug.log

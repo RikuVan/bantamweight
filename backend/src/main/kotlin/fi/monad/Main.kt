@@ -7,7 +7,6 @@ import fi.monad.formats.moshiMessageLens
 import fi.monad.persistence.initializeDatabase
 import fi.monad.user.UserRoutes
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
@@ -16,9 +15,6 @@ import org.http4k.core.with
 import org.http4k.events.EventFilters.AddTimestamp
 import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.then
-import org.http4k.filter.AllowAll
-import org.http4k.filter.CorsPolicy
-import org.http4k.filter.OriginPolicy
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader
 import org.http4k.routing.bind
@@ -65,6 +61,6 @@ object Application {
 }
 
 fun main() {
-    val server = Application.withFilters.asServer(Undertow(9000)).start()
+    val server = Application.withFilters.asServer(Undertow(Application.appDeps.config.app.port)).start()
     println("Server started on " + server.port())
 }

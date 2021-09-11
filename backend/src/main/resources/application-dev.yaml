@@ -1,0 +1,19 @@
+app:
+  env: DEV
+  port: 9000
+
+database:
+  filePath: ${BANTAMWEIGHT_DB_FILEPATH}
+  user:
+    firstName: "User"
+    lastName: "Super"
+    email: "bantamweight@gmail.com"
+    password: ${BANTAMWEIGHT_USER_PASSWORD:-password}
+    roles:
+      - 'Admin'
+
+auth:
+  secret: 'changeme-oig2pi2XaeJ1Oofechuu3AicdohCu6uLThitha6I'
+  roles:
+    - 'admin'
+    - 'customer'

@@ -15,9 +15,6 @@ object Libs {
     const val com_github_johnrengelman_shadow_gradle_plugin: String =
             "com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:_"
 
-    const val com_google_cloud_tools_jib_gradle_plugin: String =
-            "com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:_"
-
     const val kotlin_result: String = "com.michael-bull.kotlin-result:kotlin-result:_"
 
     const val nimbus_jose_jwt: String = "com.nimbusds:nimbus-jose-jwt:_"

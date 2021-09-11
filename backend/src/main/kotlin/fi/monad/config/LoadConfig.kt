@@ -14,9 +14,9 @@ fun loadConfig(): Config = ConfigLoader.Builder()
     .let {
         if (File(configPath).exists()) {
             println("Loading configuration from $configPath")
-            it.loadConfigOrThrow<Config>(Path.of(configPath))
+            it.loadConfigOrThrow(Path.of(configPath))
         } else {
             println("Loading configuration from classpath:/application-dev.yaml")
-            it.loadConfigOrThrow<Config>("/application-dev.yaml")
+            it.loadConfigOrThrow("/application-dev.yaml")
         }
     }

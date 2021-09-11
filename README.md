@@ -10,7 +10,7 @@ This app is still under development but it already includes a good part of the f
 
 ## Backend
 
-Use the `application-dev-TEMPLATE.yaml` to create your own `application-dev.yaml`, providing environment for development.
+The app will use `application-dev.yaml` by default if a file path to `application.yaml` is not added to the `ConfigDelegate.Kt` file. You must also set, at a minimum, the `BANTAMWEIGHT_DB_FILEPATH`. There are a number of ways to override the yaml values. Use env variables such as `APP__ENV` or for another methods see [hoplite](https://github.com/sksamuel/hoplite).
 
 ...start the backend
 
@@ -22,7 +22,7 @@ The app will be available at [localhost:9000](http://localhost:9000)
 
 New dependencies should be added to `versions.properties`, see [refreshVersions](https://github.com/jmfayard/refreshVersions)
 
-To make the app even lighter-weight, I have used `sqlite` with [sqldelight](https://github.com/cashapp/sqldelight). While sqldelight is easy to get started with and gives you typed queries, the migrations happen programmatically and it does not support all of sqlites's latest features. A more heavyweight ORM solution would be e.g. [jooq](https://github.com/jOOQ/jOOQ) plus [flyway](https://flywaydb.org/) for migrations, which also supports other dbs like postgres well.
+To make the app even lighter-weight, I have used `sqlite` with [sqldelight](https://github.com/cashapp/sqldelight). While sqldelight is easy to get started with and gives you typed queries. The migrations happen programmatically. It does not support all of sqlites's latest features. A more heavyweight ORM solution would be e.g. [jooq](https://github.com/jOOQ/jOOQ) plus [flyway](https://flywaydb.org/) for migrations, which also supports other dbs like postgres well.
 
 ## Frontend
 

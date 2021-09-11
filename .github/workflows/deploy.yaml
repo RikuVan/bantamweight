@@ -27,6 +27,16 @@ jobs:
           run_install: true
 
       - name: Install and Build 🔧
+        env:
+          APP__ENV: ${{ secrets.APP__ENV }}
+          DATABASE__FILEPATH: ${{ secrets.DATABASE__FILEPATH }}
+          DATABASE__USER__LAST_NAME: ${{ secrets.DATABASE__USER__LAST_NAME }}
+          DATABASE__USER__FIRST_NAME: ${{ secrets.DATABASE__USER__FIRST_NAME }}
+          DATABASE__USER__EMAIL: ${{ secrets.DATABASE__USER__EMAIL }}
+          DATABASE__USER__PASSWORD: ${{ secrets.DATABASE__USER__PASSWORD }}
+          DATABASE__USER__ROLES: ${{ secrets.DATABASE__USER__ROLES }}
+          AUTH__SECRET: ${{ secrets.AUTH__SECRET }}
+          AUTH__ROLES: ${{ secrets.AUTH__ROLES }}
         run: |
           pnpm install
           cd ./frontend

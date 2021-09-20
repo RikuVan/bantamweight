@@ -12,3 +12,5 @@ backend/src/main/resources/public/
 application.yaml
 .idea
 .pnpm-debug.log
+secrets/*
+!secrets/README.md

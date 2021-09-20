@@ -27,16 +27,6 @@ jobs:
           run_install: true
 
       - name: Install and Build 🔧
-        env:
-          APP__ENV: ${{ secrets.APP__ENV }}
-          DATABASE__FILEPATH: ${{ secrets.DATABASE__FILEPATH }}
-          DATABASE__USER__LAST_NAME: ${{ secrets.DATABASE__USER__LAST_NAME }}
-          DATABASE__USER__FIRST_NAME: ${{ secrets.DATABASE__USER__FIRST_NAME }}
-          DATABASE__USER__EMAIL: ${{ secrets.DATABASE__USER__EMAIL }}
-          DATABASE__USER__PASSWORD: ${{ secrets.DATABASE__USER__PASSWORD }}
-          DATABASE__USER__ROLES: ${{ secrets.DATABASE__USER__ROLES }}
-          AUTH__SECRET: ${{ secrets.AUTH__SECRET }}
-          AUTH__ROLES: ${{ secrets.AUTH__ROLES }}
         run: |
           pnpm install
           cd ./frontend
@@ -48,13 +38,23 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+      # replace with custom docker
+      # TODO: build and custome image
+      #- name: Validate Gradle wrapper
+      #  uses: gradle/wrapper-validation-action@v1
 
-      - name: Build with Docker image 🖼️
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        run: |
-          cd ./backend
-          ./gradlew jib --stacktrace
+      # - name: Build with Docker image 🖼️
+      #  env:
+      #    DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      #    DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      #    APP__ENV: ${{ secrets.APP__ENV }}
+      #    DATABASE__FILEPATH: ${{ secrets.DATABASE__FILEPATH }}
+      #    DATABASE__USER__LAST_NAME: ${{ secrets.DATABASE__USER__LAST_NAME }}
+      #    DATABASE__USER__FIRST_NAME: ${{ secrets.DATABASE__USER__FIRST_NAME }}    DATABASE__USER__EMAIL: ${{ secrets.DATABASE__USER__EMAIL }}
+      #    DATABASE__USER__PASSWORD: ${{ secrets.DATABASE__USER__PASSWORD }}
+      #    DATABASE__USER__ROLES: ${{ secrets.DATABASE__USER__ROLES }}
+      #    AUTH__SECRET: ${{ secrets.AUTH__SECRET }}
+      #    AUTH__ROLES: ${{ secrets.AUTH__ROLES }}
+      #  run: |
+      #    cd ./backend
+      #    ./gradlew jib --stacktrace

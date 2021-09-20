@@ -61,6 +61,10 @@ object Application {
 }
 
 fun main() {
-    val server = Application.withFilters.asServer(Undertow(Application.appDeps.config.app.port)).start()
+    // when deployig to Heroku in a container, the port is set by Heroku
+    val herokuPort = System.getenv("PORT")
+    val port = if (!herokuPort.isNullOrEmpty()) herokuPort.toInt() else Application.appDeps.config.app.port
+
+    val server = Application.withFilters.asServer(Undertow(port)).start()
     println("Server started on " + server.port())
 }

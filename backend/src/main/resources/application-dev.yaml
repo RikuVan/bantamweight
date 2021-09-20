@@ -1,19 +1,21 @@
+# override any property with env var
+# eg. APP__DEV (noticed dounle underscore)
 app:
   env: DEV
   port: 9000
 
 database:
-  filePath: ${BANTAMWEIGHT_DB_FILEPATH}
+  filePath: ${BANTAMWEIGHT_DB_FILEPATH:-/data/bantamweight.db}
   user:
-    firstName: "User"
-    lastName: "Super"
-    email: "bantamweight@gmail.com"
+    firstName: 'User'
+    lastName: 'Super'
+    email: 'bantamweight@mail.com'
     password: ${BANTAMWEIGHT_USER_PASSWORD:-password}
     roles:
-      - 'Admin'
+      - 'admin'
 
 auth:
   secret: 'changeme-oig2pi2XaeJ1Oofechuu3AicdohCu6uLThitha6I'
   roles:
     - 'admin'
-    - 'customer'
+    - 'user'

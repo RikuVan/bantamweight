@@ -1,0 +1,4 @@
+dbs:
+  - path: /data/bantamweight.db
+    replicas:
+      - url: ${REPLICA_URL}

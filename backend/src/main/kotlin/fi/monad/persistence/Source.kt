@@ -2,6 +2,7 @@ package fi.monad.persistence
 
 import fi.monad.bantamweight.Database
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import java.io.File
 import java.util.Properties
 
 fun createSource(filePath: String): () -> Database {
@@ -19,8 +20,9 @@ fun createSource(filePath: String): () -> Database {
     }
 
     val database by lazy {
+        val dbExists = filePath === "" || File(filePath).exists()
         val currentVer = driver.schemaVersion
-        if (currentVer == 0) {
+        if (currentVer == 0 || !dbExists) {
             try {
                 Database.Schema.create(driver)
             } catch(e: Throwable) {
